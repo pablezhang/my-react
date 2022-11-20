@@ -1,0 +1,25 @@
+{
+  "name": "my-react",
+  "version": "1.0.0",
+  "description": "start my react from nothing.",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel ./src -w --out-file ./build/index.js",
+    "start": "npm run build -w"
+  },
+  "keywords": [
+    "react"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BetaSu/didact.git"
+  },
+  "author": "luckybo0027",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7",
+    "@babel/plugin-transform-react-jsx": "^7.7.7",
+    "@babel/preset-env": "^7.7.7"
+  }
+}
