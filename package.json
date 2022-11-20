@@ -4,8 +4,8 @@
   "description": "start my react from nothing.",
   "main": "index.js",
   "scripts": {
-    "build": "babel ./src -w --out-file ./build/index.js",
-    "start": "npm run build -w"
+    "build": "babel ./src/index.ts  --out-file ./build/index.js",
+    "start": "npm run build "
   },
   "keywords": [
     "react"
@@ -20,6 +20,7 @@
     "@babel/cli": "^7.7.7",
     "@babel/core": "^7.7.7",
     "@babel/plugin-transform-react-jsx": "^7.7.7",
-    "@babel/preset-env": "^7.7.7"
+    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-typescript": "^7.18.6"
   }
 }
