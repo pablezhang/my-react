@@ -4,7 +4,7 @@
   "description": "start my react from nothing.",
   "main": "index.js",
   "scripts": {
-    "build": "babel ./src/index.ts  --out-file ./build/index.js",
+    "build": "babel ./src/index.tsx  --out-file ./build/index.js",
     "start": "npm run build "
   },
   "keywords": [

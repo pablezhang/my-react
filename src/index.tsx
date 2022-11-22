@@ -1,10 +1,31 @@
 /** @jsx MyReact.createElement */
 
 /*
-  学习目标：实现MyReact, 包含render, useState, createElement三个方法
+  学习目标：实现createElement
 */
 
+interface IMyReact {
+  // Reconciler（协调器）中的render，非ReactDOM中的render,
+  render?(element: IMyReactELement, container: HTMLElement): void;
+  createElement: (
+    type: keyof HTMLElementTagNameMap,
+    props: any,
+    ...children: any[]
+  ) => {
+    type: any;
+    props: any;
+  };
+  useState?: <T>(initValue: T) => [T, (newValue: T) => void];
+}
+
 // React元素：大家熟知的虚拟dom
+interface IMyReactELement<P = any> {
+  // html标签可以接收的标签属性
+  props: P;
+  // TODO: 后续支持React组件类型
+  // 元素的类型，暂时只支持tag name，
+  type: keyof HTMLElementTagNameMap;
+}
 
 // 浏览器线程空闲时执行回调的工作流
 // 每个element对应一个fiber，每个fiber是一个work unit
@@ -31,33 +52,38 @@ let hookIndex;
 // let's stat do own createElement
 
 /* 创建react元素 */
-function createElement(type, props, ...children) {
+function createElement(type: keyof HTMLElementTagNameMap, props: any, ...children) {
   return {
     type,
     props: {
       ...props,
-      children: children.map(child => {
+      children: children.map((child) => {
         // 区分创建文字元素 与 React元素
         return typeof child === 'object' ? child : createTextElement(child);
-      })
-    }
+      }),
+    },
   };
 }
 
 /* 创建文本节点 */
-function createTextElement(text) {
+function createTextElement(text: string | number) {
   return {
     type: 'TEXT_ELEMENT',
     props: {
       nodeValue: text,
       // 对于文本节点, React实际不会创建children
-      children: []
-    }
+      children: [],
+    },
   };
 }
-const MyReact = {
-  createElement
+
+const MyReact: IMyReact = {
+  createElement,
 };
-const divNode = MyReact.createElement("div", {
-  id: "foo"
-}, MyReact.createElement("a", null, "bar"), MyReact.createElement("b", null));
+
+const divNode = (
+  <div id="foo">
+    <a>bar</a>
+    <b />
+  </div>
+);
