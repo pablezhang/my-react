@@ -1,7 +1,7 @@
 /** @jsx MyReact.createElement */
 
 /*
-  学习目标：实现MyReact, 包含render, useState, createElement三个方法
+  学习目标：let's get our own render function
 */
 
 // React元素：大家熟知的虚拟dom
@@ -31,7 +31,7 @@ let hookIndex;
 // let's stat do own createElement
 
 /* 创建react元素 */
-function createElement(type, props, ...children) {
+const createElement = (type, props, ...children) => {
   return {
     type,
     props: {
@@ -42,7 +42,7 @@ function createElement(type, props, ...children) {
       })
     }
   };
-}
+};
 
 /* 创建文本节点 */
 function createTextElement(text) {
@@ -55,9 +55,25 @@ function createTextElement(text) {
     }
   };
 }
+const render = (element, container) => {
+  const dom = element.type === 'TEXT_ELEMENT' ? document.createTextNode('') : document.createElement(element.type);
+
+  // 把 element 的 props 分配给 node
+  const isProperty = key => key !== 'children';
+  Object.keys(element.props).filter(isProperty).forEach(pName => {
+    dom[pName] = element.props[pName];
+  });
+  element.props.children.forEach(child => {
+    MyReact.render(child, dom); // TODO：文字节点可以不进行递归
+  });
+
+  container.appendChild(dom);
+};
 const MyReact = {
-  createElement
+  createElement,
+  render
 };
 const divNode = MyReact.createElement("div", {
   id: "foo"
 }, MyReact.createElement("a", null, "bar"), MyReact.createElement("b", null));
+MyReact.render(divNode, document.querySelector('#root'));

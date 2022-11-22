@@ -1,12 +1,12 @@
 /** @jsx MyReact.createElement */
 
 /*
-  学习目标：实现createElement
+  学习目标：let's get our own render function
 */
 
 interface IMyReact {
   // Reconciler（协调器）中的render，非ReactDOM中的render,
-  render?(element: IMyReactELement, container: HTMLElement): void;
+  render(element: IMyReactELement, container: HTMLElement): void;
   createElement: (
     type: keyof HTMLElementTagNameMap,
     props: any,
@@ -52,7 +52,11 @@ let hookIndex;
 // let's stat do own createElement
 
 /* 创建react元素 */
-function createElement(type: keyof HTMLElementTagNameMap, props: any, ...children) {
+const createElement: IMyReact['createElement'] = (
+  type: keyof HTMLElementTagNameMap,
+  props: any,
+  ...children
+) => {
   return {
     type,
     props: {
@@ -63,7 +67,7 @@ function createElement(type: keyof HTMLElementTagNameMap, props: any, ...childre
       }),
     },
   };
-}
+};
 
 /* 创建文本节点 */
 function createTextElement(text: string | number) {
@@ -77,8 +81,30 @@ function createTextElement(text: string | number) {
   };
 }
 
+const render: IMyReact['render'] = (element, container) => {
+  const dom =
+    element.type === ('TEXT_ELEMENT' as any)
+      ? document.createTextNode('')
+      : document.createElement(element.type);
+
+  // 把 element 的 props 分配给 node
+  const isProperty = (key: string) => key !== 'children';
+  Object.keys(element.props)
+    .filter(isProperty)
+    .forEach((pName) => {
+      dom[pName] = element.props[pName];
+    });
+
+  element.props.children.forEach((child) => {
+    MyReact.render(child, dom as any); // TODO：文字节点可以不进行递归
+  });
+
+  container.appendChild(dom);
+};
+
 const MyReact: IMyReact = {
   createElement,
+  render,
 };
 
 const divNode = (
@@ -87,3 +113,5 @@ const divNode = (
     <b />
   </div>
 );
+
+MyReact.render(divNode, document.querySelector('#root'));
